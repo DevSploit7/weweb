@@ -77,7 +77,30 @@ const properties = [
         baths: "4 + Servant Room",
         sqft: 3207,
         description: "Experience luxury living where the hills meet high-end design.",
-        image: "public/images/tridenthills/township from above.jpeg",
+        images: [
+            "public/images/tridenthills/Township.jpeg",
+            "public/images/tridenthills/balcony.jpeg",
+            "public/images/tridenthills/building.jpeg",
+            "public/images/tridenthills/dam.jpeg",
+            "public/images/tridenthills/exterior again.jpeg",
+            "public/images/tridenthills/exterior building.jpeg",
+            "public/images/tridenthills/exterior of floor.jpeg",
+            "public/images/tridenthills/greenry.jpeg",
+            "public/images/tridenthills/kitchen.jpeg",
+            "public/images/tridenthills/lake.jpeg",
+            "public/images/tridenthills/living room.jpeg",
+            "public/images/tridenthills/livingroom.jpeg",
+            "public/images/tridenthills/livinig room2.jpeg",
+            "public/images/tridenthills/main living area.jpeg",
+            "public/images/tridenthills/nature.jpeg",
+            "public/images/tridenthills/sitting are.jpeg",
+            "public/images/tridenthills/sofa area.jpeg",
+            "public/images/tridenthills/sunset.jpeg",
+            "public/images/tridenthills/tearrace sitting.jpeg",
+            "public/images/tridenthills/terrace.jpeg",
+            "public/images/tridenthills/township from above.jpeg",
+            "public/images/tridenthills/window.jpeg"
+        ],
         highlights: [
             "Spacious 4 BHK Residences + Servant Room",
             "3207 sq. ft. Super Area",
@@ -104,7 +127,20 @@ const properties = [
         baths: "4 + Servant Room",
         sqft: 3207,
         description: "Perfect home for elevated lifestyles.",
-        image: "public/images/dlfvalleygardens/Dlf complex.webp",
+        images: [
+            "public/images/dlfvalleygardens/2nd bedroom.webp",
+            "public/images/dlfvalleygardens/Bedroom.webp",
+            "public/images/dlfvalleygardens/Clubhouse.webp",
+            "public/images/dlfvalleygardens/Dlf complex.webp",
+            "public/images/dlfvalleygardens/ariel view.webp",
+            "public/images/dlfvalleygardens/clubhouse_indoors.webp",
+            "public/images/dlfvalleygardens/complex.webp",
+            "public/images/dlfvalleygardens/dining area.webp",
+            "public/images/dlfvalleygardens/kitchen.webp",
+            "public/images/dlfvalleygardens/living room.webp",
+            "public/images/dlfvalleygardens/pool.webp",
+            "public/images/dlfvalleygardens/township.webp"
+        ],
         highlights: [
             "Walking Trails & Nature Parks",
             "Foothills of Shivalik",
@@ -127,10 +163,20 @@ const propertyListings = document.getElementById('property-listings');
 properties.forEach(property => {
     const highlightsList = property.highlights.map(h => `<li>${h}</li>`).join('');
     const amenitiesList = property.amenities.map(a => `<li>${a}</li>`).join('');
+    const imageSlides = property.images.map((img, index) => `
+        <div class="w-full h-64 object-cover ${index !== 0 ? 'hidden' : ''}" data-slide="${index}">
+            <img src="${img}" alt="${property.title}" class="w-full h-full object-cover" loading="lazy">
+        </div>
+    `).join('');
+
     const propertyCard = `
         <div class="property-card bg-white rounded-lg overflow-hidden shadow-lg transition duration-500 hover:shadow-2xl">
             <div class="relative">
-                <img src="${property.image}" alt="${property.title}" class="w-full h-64 object-cover" loading="lazy">
+                <div class="carousel-container w-full h-64 overflow-hidden relative">
+                    ${imageSlides}
+                </div>
+                <button class="carousel-prev absolute top-1/2 left-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full z-10"><i class="fas fa-chevron-left"></i></button>
+                <button class="carousel-next absolute top-1/2 right-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full z-10"><i class="fas fa-chevron-right"></i></button>
                 <div class="absolute top-4 right-4 bg-primary text-white text-sm font-bold px-4 py-2 rounded-full shadow-md">${property.type}</div>
             </div>
             <div class="p-6">
@@ -158,4 +204,29 @@ properties.forEach(property => {
         </div>
     `;
     propertyListings.innerHTML += propertyCard;
+});
+
+document.querySelectorAll('.property-card').forEach(card => {
+    const prevBtn = card.querySelector('.carousel-prev');
+    const nextBtn = card.querySelector('.carousel-next');
+    const slides = card.querySelectorAll('.carousel-container > div');
+    let currentSlide = 0;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('hidden', i !== index);
+        });
+    }
+
+    prevBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(currentSlide);
+    });
+
+    nextBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    });
 });
